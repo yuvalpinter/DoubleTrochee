@@ -41,6 +41,7 @@ public class AddFillersLive extends JPanel implements KeyListener {
     
     protected JTextField textField;
     protected JTextArea textArea;
+    protected JTextArea console;
 
     PronunciationDictionary pronDict;
     String lastInterruptedWord = null;
@@ -55,7 +56,11 @@ public class AddFillersLive extends JPanel implements KeyListener {
 
         textArea = new JTextArea(5, 60);
         textArea.setEditable(false);
+        textArea.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(textArea);
+        
+        console = new JTextArea(1, 60);
+        console.setEditable(false);
 
         // Add Components to this panel.
         GridBagConstraints c = new GridBagConstraints();
@@ -68,6 +73,8 @@ public class AddFillersLive extends JPanel implements KeyListener {
         c.weightx = 1.0;
         c.weighty = 1.0;
         add(scrollPane, c);
+        
+        add(console, c);
     }
 
     @Override
@@ -93,6 +100,7 @@ public class AddFillersLive extends JPanel implements KeyListener {
                 lastWord = w;
             }
             textArea.append(" " + lastWord);
+            console.setText(syllString(currPron));
             if (needsFill(currPron)) {
                 textArea.append(Consts.FILLER);
                 lastInterruptedWord = lastWord;
@@ -100,7 +108,16 @@ public class AddFillersLive extends JPanel implements KeyListener {
         }
     }
 
-    private boolean needsFill(Pronunciation pron) {
+    private String syllString(Pronunciation currPron) {
+		StringBuilder sb = new StringBuilder();
+		List<Syllable> syls = currPron.getSyllables();
+		for (Syllable syl : syls) {
+			sb.append(syl.getStress().intVal());
+		}
+		return sb.toString();
+	}
+
+	private boolean needsFill(Pronunciation pron) {
         List<Syllable> syls = pron.getSyllables();
         if (syls.size() < 4) {
             return false;

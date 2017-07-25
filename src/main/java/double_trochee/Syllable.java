@@ -2,13 +2,21 @@ package double_trochee;
 
 import java.util.List;
 
-import double_trochee.Syllable.Stress;
-
 public class Syllable {
 
     public enum Stress {
 
-        NONE, PRIMARY, SECONDARY;
+        NONE(0), PRIMARY(1), SECONDARY(2);
+    	
+    	private int intVal;
+
+		Stress(int intVal) {
+    		this.intVal = intVal;
+    	}
+		
+		public int intVal() {
+			return this.intVal;
+		}
 
         public static Stress parse(int stressInt) {
             switch (stressInt) {
